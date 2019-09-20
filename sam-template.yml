@@ -1,0 +1,30 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-function"
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      CodeUri: code
+      MemorySize: 128
+      Environment:
+        Variables:
+          DYNAMO_TBL: !Sub "${AWS::StackName}-table"
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref DynamoDBTable
+        - SNSPublishMessagePolicy:
+            TopicName: "*"
+  DynamoDBTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: !Sub "${AWS::StackName}-table"
+      PrimaryKey: 
+        Name: index
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
