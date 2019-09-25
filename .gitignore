@@ -1,6 +1,12 @@
 
 # Created by https://www.gitignore.io/api/osx,linux,python,windows,pycharm,visualstudiocode
 
+### Add settings for this repository 
+
+sam-output.yml
+code/package
+code/your_account.py
+
 ### Linux ###
 *~
 
