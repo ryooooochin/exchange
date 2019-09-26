@@ -1,15 +1,15 @@
 # これは何？
 
-lambda + OANDA APIで為替レートをDynamoDBに登録します。
+lambda + OANDA APIで為替レートをDynamoDBに登録します。  
 参考：https://takilog.com/oandaapi-get-pricingstream/#OANDA_API
 
 # 使い方
 
-aws cliの設定をする
+aws cliの設定をする  
 https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-chap-welcome.html
 
 
-OANDA APIのアカウントナンバー、アクセストークンを取得
+OANDA APIのアカウントナンバー、アクセストークンを取得  
 https://takilog.com/oandaapi-get-pricingstream/#OANDA_API
 
 code/account.pyを以下内容で作成
