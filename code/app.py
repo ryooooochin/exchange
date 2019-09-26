@@ -7,24 +7,36 @@ from oandapyV20.endpoints.pricing import PricingStream
 from oandapyV20.exceptions import V20Error
 import account as ac
 import logging
+import datetime
+import boto3
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-
-    api = API(access_token=ac.access_token, environment=event['environment'])
- 
-    params = {"instruments": event['instruments']}
-    ps = PricingStream(ac.account_number, params)
+    environment = event['environment']
+    instruments = event['instruments']
 
     statusCode = 200
     message = "OK"
+
+    api = API(access_token=ac.access_token, environment=environment)
  
+    params = {"instruments": instruments}
+    ps = PricingStream(ac.account_number, params)
+    
+    dynamoDB = boto3.resource("dynamodb")
+    table = dynamoDB.Table(instruments)
+
     try:
         for rsp in api.request(ps):
             if "bids" in rsp.keys():
-                logger.info("bids="+rsp["bids"][0]["price"])
-                logger.info("asks="+rsp["asks"][0]["price"])
+                table.put_item(
+                    Item = {
+                        "DATETIME": datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime('%Y%m%d%H%M%S'),
+                        "bid": rsp["bids"][0]["price"],
+                        "ask": rsp["asks"][0]["price"]
+                    }
+                )
                 break
  
     except V20Error as e:
