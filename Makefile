@@ -1,5 +1,5 @@
-BUCKET_NAME := hirai-bucket-for-deploy 
-STACK_NAME := hirai-exchange 
+BUCKET_NAME := XXXXX-bucket-for-deploy 
+STACK_NAME := XXXXX-exchange 
 
 bucket:
 	aws s3 mb s3://${BUCKET_NAME} --region ap-northeast-1 
