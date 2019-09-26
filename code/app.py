@@ -1,42 +1,39 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'package'))
 import json
-
-# import requests
-
+from oandapyV20 import API
+from oandapyV20.endpoints.pricing import PricingStream
+from oandapyV20.exceptions import V20Error
+import account as ac
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    """Sample pure Lambda function
 
-    Parameters
-    ----------
-    event: dict, required
-        API Gateway Lambda Proxy Input Format
+    api = API(access_token=ac.access_token, environment=event['environment'])
+ 
+    params = {"instruments": event['instruments']}
+    ps = PricingStream(ac.account_number, params)
 
-        Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
-
-    context: object, required
-        Lambda Context runtime methods and attributes
-
-        Context doc: https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
-
-    Returns
-    ------
-    API Gateway Lambda Proxy Output Format: dict
-
-        Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
-    """
-
-    # try:
-    #     ip = requests.get("http://checkip.amazonaws.com/")
-    # except requests.RequestException as e:
-    #     # Send some context about this error to Lambda Logs
-    #     print(e)
-
-    #     raise e
+    statusCode = 200
+    message = "OK"
+ 
+    try:
+        for rsp in api.request(ps):
+            if "bids" in rsp.keys():
+                logger.info("bids="+rsp["bids"][0]["price"])
+                logger.info("asks="+rsp["asks"][0]["price"])
+                break
+ 
+    except V20Error as e:
+        statusCode = 500
+        message = "Error: {}".format(e)
 
     return {
-        "statusCode": 200,
+        "statusCode": statusCode,
         "body": json.dumps({
-            "message": "hello world",
-            # "location": ip.text.replace("\n", "")
+            "message": message
         }),
     }

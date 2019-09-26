@@ -5,7 +5,7 @@
 
 sam-output.yml
 code/package
-code/your_account.py
+code/account.py
 
 ### Linux ###
 *~
