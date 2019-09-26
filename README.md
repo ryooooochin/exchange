@@ -39,9 +39,11 @@ STACK_NAME := XXXXX-exchange
 make all
 ```
 
-SAM localの設定をすれば  
-https://dev.classmethod.jp/cloud/aws/20170816-sam-local/  
-以下コマンドでローカル実行
-```
-sam local invoke ExchangeFunction -e event.json
-```
+取得する通貨ペアはevent.jsonで指定  
+
+デフォルトではデモ口座でUSDJPYの値を取得  
+
+本口座を使う場合はevent.jsonのpracticeをliveに変更する
+
+DynamoDBのテーブル名は通貨ペア（USD_JPY等）と同じにする  
+パーティションキー名はDATETIME（文字列）
