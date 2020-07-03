@@ -39,11 +39,20 @@ STACK_NAME := XXXXX-exchange
 make all
 ```
 
-取得する通貨ペアはevent.jsonで指定  
+後は、CloudWatchのイベントルールで定期実行
 
-デフォルトではデモ口座でUSDJPYの値を取得  
+取得する通貨ペア、口座はJSONで指定（サンプル：event.json）  
 
-本口座を使う場合はevent.jsonのpracticeをliveに変更する
+```
+{
+  "environment": "practice",
+  "instruments": "USD_JPY"
+}
+```
+
+上記の例では、デモ口座でUSDJPYの値を取得  
+
+本口座を使う場合はpracticeをliveに変更する
 
 DynamoDBのテーブル名は通貨ペア（USD_JPY等）と同じにする  
 パーティションキー名はDATETIME（文字列）
